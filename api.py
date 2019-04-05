@@ -1,10 +1,19 @@
-from flask import Flask, request
+from flask import Flask, request, render_template, make_response
 from flask_restful import Resource, Api
 
 app = Flask(__name__)
 api = Api(app)
 
 todos = {}
+
+
+class Index(Resource):
+    def __init__(self):
+        pass
+
+    def get(self):
+        headers = {'Content-Type': 'text/html'}
+        return make_response(render_template('index.html'), 200, headers)
 
 
 class TodoSimple(Resource):
@@ -16,7 +25,8 @@ class TodoSimple(Resource):
         return {todo_id: todos[todo_id]}
 
 
-api.add_resource(TodoSimple, '/<string:todo_id>')
+api.add_resource(Index, '/')
+api.add_resource(TodoSimple, '/api/<string:todo_id>')
 
 
 if __name__ == '__main__':
